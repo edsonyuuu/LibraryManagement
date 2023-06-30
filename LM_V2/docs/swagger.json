@@ -1,0 +1,1278 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/GetCode/{phone}": {
+            "get": {
+                "description": "生成并发送验证码到用户，并将验证码存储在Redis中",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "发送验证码",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "手机号",
+                        "name": "phone",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/books": {
+            "post": {
+                "description": "添加新图书",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "添加图书",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "图书分类ID",
+                        "name": "categoryId",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "图书编号",
+                        "name": "bn",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "图书名称",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "图书描述",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "图书数量",
+                        "name": "count",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/books/{id}": {
+            "put": {
+                "description": "根据图书ID更新图书信息",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminPUT"
+                ],
+                "summary": "更新图书信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "图书ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "图书编号",
+                        "name": "bn",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "图书名称",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "图书描述",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "图书数量",
+                        "name": "count",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "图书种类ID",
+                        "name": "categoryId",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "根据图书ID删除图书信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminDelete"
+                ],
+                "summary": "删除图书",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "图书ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/categories": {
+            "post": {
+                "description": "添加新的图书种类信息",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "添加图书种类信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "图书种类名称",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/categories/{id}": {
+            "put": {
+                "description": "根据图书分类ID更新图书分类信息",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminPUT"
+                ],
+                "summary": "更新图书种类信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "图书分类ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "分类名称",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "根据图书种类ID删除图书种类信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminDelete"
+                ],
+                "summary": "删除图书种类",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "图书种类ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/records": {
+            "get": {
+                "description": "查询记录表中的所有记录",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminGet"
+                ],
+                "summary": "查询记录表信息",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/records/{status}": {
+            "get": {
+                "description": "根据归还或未归还状态查询记录表信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminGet"
+                ],
+                "summary": "查询记录表归还或未归还状态信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "归还或未归还状态，1为未归还，0为已归还",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users": {
+            "get": {
+                "description": "查看所有用户信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminGet"
+                ],
+                "summary": "查询所有用户",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users/{id}": {
+            "put": {
+                "description": "管理员修改用户信息",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminPUT"
+                ],
+                "summary": "管理员修改用户信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "更新用户名",
+                        "name": "user_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "更新用户密码",
+                        "name": "newPwd",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "更新用户手机号码",
+                        "name": "phone",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "根据用户ID删除用户信息",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminDelete"
+                ],
+                "summary": "删除用户信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users/{id}/records/{status}": {
+            "get": {
+                "description": "管理员获取用户借阅状态",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminGet"
+                ],
+                "summary": "获取用户借阅状态",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "借阅状态码（1为借阅；0为未借阅）",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/adminLogin": {
+            "post": {
+                "description": "执行管理员登录操作",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin登录模块"
+                ],
+                "summary": "管理员登录",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名",
+                        "name": "user_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "密码",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "手机号",
+                        "name": "phone",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "验证码",
+                        "name": "code",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/tools.HttpCode"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/logic.Token"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/tools.HttpCode"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/logic.Token"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/adminLogout": {
+            "get": {
+                "description": "管理员退出登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin登录模块"
+                ],
+                "summary": "管理员退出登录",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/books/page": {
+            "get": {
+                "description": "游客获取所有图书信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "游客模式"
+                ],
+                "summary": "搜索图书",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "图书id",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页书籍数量",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/books/{id}": {
+            "get": {
+                "description": "根据图书ID获取图书信息",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "游客模式"
+                ],
+                "summary": "获取图书bookId的信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "图书ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "get": {
+                "description": "获取所有图书种类信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "游客模式"
+                ],
+                "summary": "搜索图书种类",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "description": "会执行用户退出操作",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "用户退出",
+                "responses": {
+                    "302": {
+                        "description": "Found",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/users": {
+            "get": {
+                "description": "根据用户ID获取用户信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户信息"
+                ],
+                "summary": "获取用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "根据请求中的参数更新用户信息",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户信息"
+                ],
+                "summary": "更新用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "新用户名",
+                        "name": "user_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "旧密码",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "新密码",
+                        "name": "new_password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "新手机号",
+                        "name": "phone",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/users/messages": {
+            "get": {
+                "description": "获取用户收件箱信息(这个接口获取消息没有什么意义，只是提示有书没还)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user/users"
+                ],
+                "summary": "用户收件箱",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/users/records/{bookId}": {
+            "put": {
+                "description": "用户归还图书",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "图书借阅与归还"
+                ],
+                "summary": "还书",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "图书ID",
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "根据用户ID和图书ID进行借阅操作",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "图书借阅与归还"
+                ],
+                "summary": "借阅图书",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "图书ID",
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/users/{id}/records": {
+            "get": {
+                "description": "根据用户ID查询其借阅记录",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户借阅记录"
+                ],
+                "summary": "获取用户借阅记录",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/users/{id}/records/{status}": {
+            "get": {
+                "description": "根据用户ID和status来查看某个用户没有还书或还书的情况",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户借阅或归还状态"
+                ],
+                "summary": "获取用户借阅记录状态",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/userLogin": {
+            "post": {
+                "description": "会执行用户登录操作",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名",
+                        "name": "user_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "密码",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "手机号",
+                        "name": "phone",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "验证码",
+                        "name": "code",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/tools.HttpCode"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/logic.Token"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/tools.HttpCode"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/logic.Token"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "description": "用户注册",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "用户注册",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名",
+                        "name": "user_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "手机号码",
+                        "name": "phone",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "用户密码",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "用户真实姓名",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "性别",
+                        "name": "sex",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/tools.HttpCode"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "logic.Token": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "tools.HttpCode": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
