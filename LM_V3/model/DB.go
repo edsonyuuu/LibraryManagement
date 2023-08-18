@@ -11,9 +11,9 @@ var DB *gorm.DB
 
 func MySql() {
 	username := "root"            //账号
-	password := "1234"            //密码
-	host := "127.0.0.1"           //数据库地址，可以是IP
-	port := 3306                  //数据库端口
+	password := "123456"          //密码
+	host := "192.168.16.129"      //数据库地址，可以是IP
+	port := 3307                  //数据库端口
 	Dbname := "librarymanagement" //数据库名
 	timeout := "10s"              //连接超时，10s
 
@@ -33,10 +33,10 @@ func MySql() {
 		panic("连接数据库失败，err=" + err.Error())
 	}
 	DB = db
-	err = DB.AutoMigrate(&SendMsg{})
-	if err != nil {
-		fmt.Printf("创建表结构失败err:%+v\n", err.Error())
-	}
+	//err = DB.AutoMigrate(&SendMsg{}, &User{})
+	//if err != nil {
+	//	fmt.Printf("创建表结构失败err:%+v\n", err.Error())
+	//}
 	//err2 := DB.AutoMigrate(&User{}, &Book{}, &Category{}, &Librarian{}, &Record{})
 	//err2 := DB.AutoMigrate(&Book{})
 	//if err2 != nil {
@@ -51,21 +51,29 @@ func MySql() {
 	//	fmt.Println("err", err)
 	//}
 	//fmt.Println(len(bookinfo))
+	//
+	//for i := 0; i < len(bookinfo); i++ {
+	//	fmt.Println(i)
+	//}
 	//i := 0
 	//k := 100
 	//for i < len(bookinfo) {
 	//	rand.Seed(time.Now().UnixNano())
-	//	// 生成一个0到100之间的随机整数
+	//	// 生成一个0到10之间的随机整数
 	//	randomNumber := rand.Intn(10) + 1
 	//	tx := DB.Begin()
-	//	sql1 := "insert into book(bn,name,description,count,category_id,img_url) values (?,?,?,?,?,?)"
+	//	sql1 := "insert into `book` (bn,name,description,count,category_id,img_url) values (?,?,?,?,?,?)"
 	//	err1 := tx.Exec(sql1, bookinfo[i].ISBN, bookinfo[i].BookName, bookinfo[i].BriefIntroduction, k, randomNumber, bookinfo[i].ImgUrl).Error
 	//	if err1 != nil {
 	//		fmt.Println(err1)
-	//		panic(err1)
+	//		tx.Rollback()
 	//	}
 	//	tx.Commit()
 	//	i++
+	//	if i == len(bookinfo) {
+	//		break
+	//	}
+	//
 	//}
 
 }

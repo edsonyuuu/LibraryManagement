@@ -1,8 +1,8 @@
 package logic
 
 import (
-	"LibraryManagementV1/LM_V2/model"
-	"LibraryManagementV1/LM_V2/tools"
+	"LibraryManagementV1/LM_V3/model"
+	"LibraryManagementV1/LM_V3/tools"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"

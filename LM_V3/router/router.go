@@ -1,10 +1,10 @@
 package router
 
 import (
-	"LibraryManagementV1/LM_V1/tools"
-	_ "LibraryManagementV1/LM_V2/docs"
-	"LibraryManagementV1/LM_V2/logic"
-	"LibraryManagementV1/LM_V2/model"
+	_ "LibraryManagementV1/LM_V3/docs"
+	"LibraryManagementV1/LM_V3/logic"
+	"LibraryManagementV1/LM_V3/model"
+	"LibraryManagementV1/LM_V3/tools"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"

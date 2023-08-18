@@ -18,18 +18,19 @@ func New() *gin.Engine {
 	r := gin.Default()
 	userRouter(r)
 	adminRouter(r)
+	r.Static("/kit", "./kit")
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	//验证码
-	r.GET("/GetCode", logic.SendNum)            //
-	r.POST("/userLogin", logic.UserLogin)       //
-	r.POST("/userLogout", logic.Logout)         //
-	r.POST("/users", logic.AddUser)             //
-	r.POST("/adminLogin", logic.LibrarianLogin) //
-	r.GET("/adminLogout", logic.AdminLogout)    //
+	r.GET("/GetCode", logic.SendNum)
+	r.POST("/userLogin", logic.UserLogin)
+	r.POST("/userLogout", logic.Logout)
+	r.POST("/users", logic.AddUser)
+	r.POST("/adminLogin", logic.LibrarianLogin)
+	r.GET("/adminLogout", logic.AdminLogout)
 	//游客可以浏览书籍和分类
-	r.GET("/books", logic.SearchBook)          //
-	r.GET("/books/:id", logic.GetBook)         //
-	r.GET("/categories", logic.SearchCategory) //
+	r.GET("/books", logic.SearchBook)
+	r.GET("/books/:id", logic.GetBook)
+	r.GET("/categories", logic.SearchCategory)
 	/*time1 := time.NewTicker(1 * time.Minute)
 	go func() {
 		for {
