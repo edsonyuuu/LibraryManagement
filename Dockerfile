@@ -1,5 +1,5 @@
 # 使用 golang 的官方镜像作为基础镜像
-FROM golang:1.20 AS builder
+FROM golang:latest AS builder
 
 # 设置 GOPROXY 环境变量
 ENV GOPROXY=https://goproxy.cn,direct
