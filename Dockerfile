@@ -9,15 +9,15 @@ ENV GOCACHE=/path/to/cache
 
 
 # 设置工作目录
-WORKDIR /app
+WORKDIR  /app
 
 # 将项目代码复制到容器中
-COPY LibraryManagement/ ./LibraryManagement/
+COPY . .
 COPY go.mod go.sum ./
 RUN go mod download
 
 # 进入 LibraryM 目录
-WORKDIR /app/LibraryManagement
+#WORKDIR /app
 
 # 构建项目
 RUN go build -o main .
@@ -26,10 +26,10 @@ RUN go build -o main .
 FROM alpine:latest
 
 # 设置工作目录
-#WORKDIR /app
+WORKDIR /app
 
 # 复制编译好的二进制文件
-COPY --from=builder /app/LibraryManagement/main .
+COPY --from=builder /app/main .
 
 # 指定容器启动时执行的命令
 CMD ["./main", "-p", "8083"]
