@@ -1,16 +1,35 @@
 package model
 
 import (
+	"LibraryManagementV1/LM_V3/global"
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"time"
 )
 
-var store, _ = redis.NewStore(10, "tcp", "127.0.0.1:6379", "", []byte("secret"))
-
+// var store, _ = redis.NewStore(10, "tcp", global.Config.Redis.Addr(), "", []byte("secret"))
 // var store = sessions.NewCookieStore([]byte("secret"))
+var store redis.Store
+
+func InitStore() {
+	var err error
+	store, err = redis.NewStore(10, "tcp", global.Config.Redis.Addr(), global.Config.Redis.Password, []byte("secret"))
+	if err != nil {
+		global.Log.Error(err)
+	}
+	// 设置 Cookie 域
+	store.Options(sessions.Options{
+		Domain:   "",
+		Path:     "/",
+		MaxAge:   86400,
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
+	})
+}
+
 var sessionName = "session_id"
 
 func GetSession(c *gin.Context) map[interface{}]interface{} {
@@ -43,7 +62,6 @@ func SaveSession(c *gin.Context, name string, id int64) error {
 	fmt.Printf("sessionValue: %+v\n", session.Values)
 	//保存更改
 	return session.Save(c.Request, c.Writer)
-
 }
 
 // DeleteSession 删除session

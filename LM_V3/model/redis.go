@@ -1,6 +1,7 @@
 package model
 
 import (
+	"LibraryManagementV1/LM_V3/global"
 	"bytes"
 	"compress/gzip"
 	"context"
@@ -14,17 +15,17 @@ import (
 //var RedisConn *redis.Client
 
 // RedisConn2 存储查找bookId所在页
-var RedisConn2 *redis.Client
+//var RedisConn2 *redis.Client
 
-func init() {
+func InitRedis() {
 	// 创建 Redis 客户端连接
-	RedisConn2 = redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379",
-		Password: "", // Redis 未设置密码时为空
-		DB:       1,  // 使用默认数据库
+	global.RedisConn = redis.NewClient(&redis.Options{
+		Addr:     global.Config.Redis.Addr(),
+		Password: global.Config.Redis.Password, // Redis 未设置密码时为空
+		DB:       1,
 	})
 	// 测试连接是否成功
-	_, err := RedisConn2.Ping(context.Background()).Result()
+	_, err := global.RedisConn.Ping(context.Background()).Result()
 	if err != nil {
 		fmt.Printf("Failed to connect to Redis DB2: %v", err)
 		return
@@ -61,7 +62,7 @@ func YS(book []Book) []byte {
 
 	// 将压缩后的 JSON 数据存储到 Redis 中
 	// 使用RedisConn.Set方法将buf.Bytes()作为值，"book"作为键，存储到Redis中，并设置过期时间为5分钟。
-	err = RedisConn2.Set(ctx, "book", buf.Bytes(), 5*time.Minute).Err()
+	err = global.RedisConn.Set(ctx, "book", buf.Bytes(), 5*time.Minute).Err()
 
 	//如果存储过程中出现错误，会在控制台输出相关错误信息。
 	if err != nil {
@@ -102,7 +103,7 @@ func YS2(book []Book) []byte {
 
 	// 将压缩后的 JSON 数据存储到 Redis 中
 	// 使用RedisConn.Set方法将buf.Bytes()作为值，"bookId"作为键，存储到Redis中，并设置过期时间为5分钟。
-	err = RedisConn2.Set(ctx, "bookId", buf.Bytes(), 5*time.Minute).Err()
+	err = global.RedisConn.Set(ctx, "bookId", buf.Bytes(), 5*time.Minute).Err()
 
 	//如果存储过程中出现错误，会在控制台输出相关错误信息。
 	if err != nil {

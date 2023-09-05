@@ -1,0 +1,38 @@
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
+  db: librarymanagement
+  user: root
+  password: 1234
+  log_lev: info
+
+#192.168.1.100
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password:
+
+
+logger:
+  level: info
+  prefix: my_blog
+  director: log
+  show_line: true
+  log_in_console: true
+
+grpc:
+  host: 127.0.0.1
+  port: 9090
+
+system:
+  port: 8080
+  env: debug
+jwt:
+  secret: XXx
+  expires: 48
+  issue: XX
+sms:
+  limit: 5 #每日短信次数限制
+  whitelisted_phone_number: "15993589038,15537607006,15083139351,15036626258" #白名单号码,用","分割

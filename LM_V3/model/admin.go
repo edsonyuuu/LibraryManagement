@@ -1,6 +1,7 @@
 package model
 
 import (
+	"LibraryManagementV1/LM_V3/global"
 	"fmt"
 	"time"
 )
@@ -9,14 +10,14 @@ func CheckAdminMsg(userName, password string) *Librarian {
 
 	var admin *Librarian
 	sql := "select * from librarian where user_name = ? and password = ?"
-	err := DB.Raw(sql, userName, password).Scan(&admin).Error
+	err := global.DB.Raw(sql, userName, password).Scan(&admin).Error
 	if err != nil {
 		fmt.Printf("管理员登录信息校验失败！")
 	}
 	return admin
 }
 func DeleteUser(userId int64) bool {
-	tx := DB.Begin()
+	tx := global.DB.Begin()
 	sql := "delete from user where id = ? "
 	err := tx.Exec(sql, userId).Error
 	if err != nil {
@@ -31,7 +32,7 @@ func DeleteUser(userId int64) bool {
 func ReturnTime(time1 time.Time) []int64 {
 	user := make([]int64, 0)
 	sql := "select distinct user_id from record where status = 1 and over_time <= ?"
-	err := DB.Raw(sql, time1).Scan(&user).Error
+	err := global.DB.Raw(sql, time1).Scan(&user).Error
 	if err != nil {
 		fmt.Printf("查询未归还用户时间err:%+v\n", err.Error())
 	}
@@ -42,7 +43,7 @@ func AdvanceOneDay() {
 	user := make([]*Record, 0)
 	//user := make([]*int64, 0)
 	sql := "select distinct user_id from record where status = 1 and  over_time-Now()<interval '1 day'"
-	err := DB.Raw(sql).Scan(&user).Error
+	err := global.DB.Raw(sql).Scan(&user).Error
 	if err != nil {
 		fmt.Printf("查找到期前一天的用户id失败!err:%+v\n", err.Error())
 	}
@@ -52,12 +53,12 @@ func AdvanceOneDay() {
 func BanUsers(userId []int64) bool {
 	user := make([]*Record, 0)
 	sql1 := "select user_id from record where status = 1 "
-	err := DB.Raw(sql1, userId).Scan(&user).Error
+	err := global.DB.Raw(sql1, userId).Scan(&user).Error
 	if err != nil {
 		fmt.Printf("sql查询失败!err:%+v\n", err.Error())
 	}
 	//
-	tx := DB.Begin()
+	tx := global.DB.Begin()
 	sql2 := "update user set status = 1  where id = ?"
 	for i := 0; i < len(userId); i++ {
 		tx.Exec(sql2, userId[i])

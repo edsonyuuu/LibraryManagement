@@ -117,13 +117,13 @@ func GetRedisBookId(c *gin.Context, bookIdStr string, size int, direction string
 	if err == redis.Nil {
 		book := make([]Book, 0)
 		if direction == "back" {
-			sql := "select * from book where id >= ? order by id ASC limit ?"
+			sql := "select * from book where id > ? order by id ASC limit ?"
 			err := DB.Raw(sql, id, size).Scan(&book).Error
 			if err != nil {
 				fmt.Printf("查找bookId页之后的图书失败:%+v\n", err.Error())
 			}
 		} else {
-			sql := "select * from book where id <= ? order by id ASC limit ?"
+			sql := "select * from book where id < ? order by id ASC limit ?"
 			err := DB.Raw(sql, id, size).Scan(&book).Error
 			if err != nil {
 				fmt.Printf("查找bookId页之前的图书失败:%+v\n", err.Error())

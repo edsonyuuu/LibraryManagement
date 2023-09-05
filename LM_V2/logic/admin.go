@@ -11,12 +11,12 @@ import (
 
 // SearchUser godoc
 //
-// @Summary 查询所有用户
-// @Description 查看所有用户信息
-// @Tags  AdminGet
-// @Produce json
-// @Success 200,500 {object} tools.HttpCode
-// @Router /admin/users [get]
+//	@Summary		查询所有用户
+//	@Description	查看所有用户信息
+//	@Tags			AdminGet
+//	@Produce		json
+//	@Success		200,500	{object}	tools.HttpCode
+//	@Router			/admin/users [get]
 func SearchUser(c *gin.Context) {
 	idStr, _ := c.Cookie("id")
 	id, _ := strconv.ParseInt(idStr, 10, 64)
@@ -46,18 +46,20 @@ func SearchUser(c *gin.Context) {
 
 // AddUser godoc
 //
-// @Summary 用户注册
-// @Description 用户注册
-// @Tags  User
+//	@Summary		用户注册
+//	@Description	用户注册
+//	@Tags			User
+//
 // Accept  multipart/form-data
-// @Produce json
-// @Param user_name formData string true "用户名"
-// @Param phone formData string true "手机号码"
-// @Param password formData string true "用户密码"
-// @Param name formData string true "用户真实姓名"
-// @Param sex formData string true "性别"
-// @response 200,500 {object} tools.HttpCode
-// @Router /users [post]
+//
+//	@Produce		json
+//	@Param			user_name	formData	string	true	"用户名"
+//	@Param			phone		formData	string	true	"手机号码"
+//	@Param			password	formData	string	true	"用户密码"
+//	@Param			name		formData	string	true	"用户真实姓名"
+//	@Param			sex			formData	string	true	"性别"
+//	@response		200,500		{object}	tools.HttpCode
+//	@Router			/users [post]
 func AddUser(c *gin.Context) {
 	//获取参数
 	userName := c.PostForm("user_name") //注册用户名
@@ -140,17 +142,18 @@ func AddUser(c *gin.Context) {
 }
 
 // UpdateUserByAdmin 管理员修改用户信息
-// @Summary 管理员修改用户信息
-// @Description 管理员修改用户信息
-// @Tags AdminPUT
-// @Accept multipart/form-data
-// @Produce json
-// @Param id path int true "UserID"
-// @Param user_name formData string true "更新用户名"
-// @Param newPwd formData string true "更新用户密码"
-// @Param phone formData string true "更新用户手机号码"
-// @response 200,500 {object} tools.HttpCode
-// @Router /admin/users/{id} [put]
+//
+//	@Summary		管理员修改用户信息
+//	@Description	管理员修改用户信息
+//	@Tags			AdminPUT
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			id			path		int		true	"UserID"
+//	@Param			user_name	formData	string	true	"更新用户名"
+//	@Param			newPwd		formData	string	true	"更新用户密码"
+//	@Param			phone		formData	string	true	"更新用户手机号码"
+//	@response		200,500		{object}	tools.HttpCode
+//	@Router			/admin/users/{id} [put]
 func UpdateUserByAdmin(c *gin.Context) {
 	var user model.User
 	err := c.ShouldBind(&user) //参数绑定，可以绑定json，query，param，yaml，xml，校验不通过，返回错误
@@ -198,14 +201,14 @@ func UpdateUserByAdmin(c *gin.Context) {
 
 // DeleteUser godoc
 //
-// @Summary 删除用户信息
-// @Description 根据用户ID删除用户信息
-// @Tags AdminDelete
-// @Accept multipart/form-data
-// @Produce json
-// @Param id path int true "用户ID"
-// @Success 200,500 {object} tools.HttpCode
-// @Router /admin/users/{id} [delete]
+//	@Summary		删除用户信息
+//	@Description	根据用户ID删除用户信息
+//	@Tags			AdminDelete
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			id		path		int	true	"用户ID"
+//	@Success		200,500	{object}	tools.HttpCode
+//	@Router			/admin/users/{id} [delete]
 func DeleteUser(c *gin.Context) {
 	userIdStr := c.Param("id")
 	userId, _ := strconv.ParseInt(userIdStr, 10, 64)
@@ -227,15 +230,16 @@ func DeleteUser(c *gin.Context) {
 }
 
 // GetUserBook 获取用户已归还或者未归还的所有记录
-// @Summary 获取用户借阅状态
-// @Description 管理员获取用户借阅状态
-// @Tags AdminGet
-// @Accept multipart/form-data
-// @Produce json
-// @Param id path int true "用户ID"
-// @Param status path int true "借阅状态码（1为借阅；0为未借阅）"
-// @response 200,500 {object} tools.HttpCode
-// @Router /admin/users/{id}/records/{status} [get]
+//
+//	@Summary		获取用户借阅状态
+//	@Description	管理员获取用户借阅状态
+//	@Tags			AdminGet
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			id		path		int	true	"用户ID"
+//	@Param			status	path		int	true	"借阅状态码（1为借阅；0为未借阅）"
+//	@response		200,500	{object}	tools.HttpCode
+//	@Router			/admin/users/{id}/records/{status} [get]
 func GetUserBook(c *gin.Context) {
 	//    /admin/users/:id/records/:status
 	userIdStr := c.Param("id")

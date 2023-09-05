@@ -1,6 +1,7 @@
 package model
 
 import (
+	"LibraryManagementV1/LM_V3/global"
 	"fmt"
 	"time"
 )
@@ -9,7 +10,7 @@ func Listen() {
 	//
 	sql := "select distinct user_id from record where over_time >=DATE_SUB(NOW(),INTERVAL 1 DAY) and status = 1"
 	var userIds []int64
-	DB.Raw(sql).Scan(&userIds)
+	global.DB.Raw(sql).Scan(&userIds)
 	fmt.Println("所需还书用户id", userIds)
 
 	if len(userIds) == 0 {
@@ -17,7 +18,7 @@ func Listen() {
 	}
 	//
 	for _, userId := range userIds {
-		tx := DB.Begin()
+		tx := global.DB.Begin()
 		//再次检测用户是否还书
 		sql = "select * from record where status = 1 and user_id >= ? for update"
 		var users []User

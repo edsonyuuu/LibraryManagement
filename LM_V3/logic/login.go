@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"LibraryManagementV1/LM_V3/global"
 	"LibraryManagementV1/LM_V3/model"
 	"LibraryManagementV1/LM_V3/tools"
 	"fmt"
@@ -28,17 +29,17 @@ type Token struct {
 
 // UserLogin godoc
 //
-//		@Summary		用户登录
-//		@Description	会执行用户登录操作
-//		@Tags			User
-//		@Accept			multipart/form-data
-//		@Produce		json
-//		@Param			user_name	formData	string	true	"用户名"
-//		@Param			password	formData	string	true	"密码"
-//	 @Param	        phone	    formData	string	 true	"手机号"
-//		@Param			code	    formData	string	true	"验证码"
-//		@response		200,500	{object}	tools.HttpCode{data=Token}
-//		@Router			/userLogin [POST]
+//	@Summary		用户登录
+//	@Description	会执行用户登录操作
+//	@Tags			User
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			user_name	formData	string	true	"用户名"
+//	@Param			password	formData	string	true	"密码"
+//	@Param			phone		formData	string	true	"手机号"
+//	@Param			code		formData	string	true	"验证码"
+//	@response		200,500		{object}	tools.HttpCode{data=Token}
+//	@Router			/userLogin [POST]
 func UserLogin(c *gin.Context) {
 	phone := c.PostForm("phone")
 	ans := IsPhoneNumber(phone)
@@ -53,7 +54,7 @@ func UserLogin(c *gin.Context) {
 			return
 		}
 	}
-	code, err := model.RedisConn2.Get(c, phone).Result()
+	code, err := global.RedisConn.Get(c, phone).Result()
 	if err != nil {
 		fmt.Println("Failed to store verification code in Redis:", err.Error())
 	}
@@ -122,17 +123,17 @@ func UserLogin(c *gin.Context) {
 
 // LibrarianLogin godoc
 //
-//		@Summary		管理员登录
-//		@Description	执行管理员登录操作
-//		@Tags			Admin登录模块
-//		@Accept			multipart/form-data
-//		@Produce		json
-//		@Param			user_name	formData	string	true	"用户名"
-//		@Param			password	formData	string	true	"密码"
-//	 @Param	        phone	    formData	string	 true	"手机号"
-//		@Param			code	    formData	string	true	"验证码"
-//		@response		200,500	{object}	tools.HttpCode{data=Token}
-//		@Router			/adminLogin [POST]
+//	@Summary		管理员登录
+//	@Description	执行管理员登录操作
+//	@Tags			Admin登录模块
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			user_name	formData	string	true	"用户名"
+//	@Param			password	formData	string	true	"密码"
+//	@Param			phone		formData	string	true	"手机号"
+//	@Param			code		formData	string	true	"验证码"
+//	@response		200,500		{object}	tools.HttpCode{data=Token}
+//	@Router			/adminLogin [POST]
 func LibrarianLogin(c *gin.Context) {
 	phone := c.PostForm("phone")
 	ans := IsPhoneNumber(phone)
@@ -144,7 +145,7 @@ func LibrarianLogin(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	code, err := model.RedisConn2.Get(c, phone).Result()
+	code, err := global.RedisConn.Get(c, phone).Result()
 	if err != nil {
 		fmt.Println("Failed to store verification code in Redis:", err.Error())
 	}
@@ -241,7 +242,7 @@ func AdminLogout(c *gin.Context) {
 func SendNum(c *gin.Context) {
 	// 生成验证码
 	SendCode := model.GenerateCode()
-	ret := model.RedisConn2.Set(c, "code", SendCode, 5*time.Minute)
+	ret := global.RedisConn.Set(c, "code", SendCode, 5*time.Minute)
 	if ret != nil {
 		c.JSON(http.StatusOK, tools.HttpCode{
 			Code:    tools.OK,
@@ -265,13 +266,14 @@ type verificationCode struct {
 var verificationCodes map[string]*verificationCode
 
 // AliSendMsg godoc
-// @Summary 发送验证码
-// @Description 生成并发送验证码到用户，并将验证码存储在Redis中
-// @Produce json
-// @Param	phone	path	string	true	"手机号"
-// @Success 200 {object} tools.HttpCode
-// @Failure 404 {object} tools.HttpCode
-// @Router /GetCode/{phone} [get]
+//
+//	@Summary		发送验证码
+//	@Description	生成并发送验证码到用户，并将验证码存储在Redis中
+//	@Produce		json
+//	@Param			phone	path		string	true	"手机号"
+//	@Success		200		{object}	tools.HttpCode
+//	@Failure		404		{object}	tools.HttpCode
+//	@Router			/GetCode/{phone} [get]
 func AliSendMsg(c *gin.Context) {
 	phone := c.Param("phone")
 	// 判断手机号是否是非法手机号
@@ -312,7 +314,7 @@ func AliSendMsg(c *gin.Context) {
 	// 调用阿里云API执行发送验证码到手机的功能
 	//tools.Aliyun(phone, SendCode)
 	// 设置验证码在redis中的缓存时间,5分钟，3*24*60
-	ret := model.RedisConn2.Set(c, phone, SendCode, 5*time.Minute)
+	ret := global.RedisConn.Set(c, phone, SendCode, 5*time.Minute)
 
 	if ret != nil {
 		c.JSON(http.StatusOK, tools.HttpCode{

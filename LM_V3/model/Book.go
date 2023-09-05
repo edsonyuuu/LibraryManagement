@@ -1,6 +1,7 @@
 package model
 
 import (
+	"LibraryManagementV1/LM_V3/global"
 	"bytes"
 	"compress/gzip"
 	"context"
@@ -19,7 +20,7 @@ import (
 func GetCategory() []*Category {
 	category := make([]*Category, 0)
 	sql1 := "SELECT * FROM `category`"
-	err := DB.Raw(sql1).Scan(&category).Error
+	err := global.DB.Raw(sql1).Scan(&category).Error
 
 	if err != nil {
 		fmt.Printf("查询图书种类err:%+v\n", err.Error())
@@ -32,11 +33,11 @@ func GetBooks(c *gin.Context, pageStr string, page int, size int) []Book {
 	key := "book" + pageStr //pageStr 为查询页
 	fmt.Println(key)
 	//根据传入的pageStr构造键名key，用于在Redis中查找数据,并将数据保存在data中.
-	data, err := RedisConn2.Get(c, key).Bytes()
+	data, err := global.RedisConn.Get(c, key).Bytes()
 	//如果Redis中不存在该数据，即err为redis.Nil，则说明需要从数据库中获取数据，并进行压缩存储到Redis中。
 	if err == redis.Nil {
 		book := make([]Book, 0)
-		err = DB.Offset((page - 1) * size).Limit(size).Find(&book).Error //分页查询
+		err = global.DB.Offset((page - 1) * size).Limit(size).Find(&book).Error //分页查询
 		if err != nil {
 			fmt.Printf("err:%+v\n", err.Error())
 		}
@@ -44,7 +45,7 @@ func GetBooks(c *gin.Context, pageStr string, page int, size int) []Book {
 		Y := YS(book)
 		data = Y
 		//使用RedisConn.Set方法将key和Y存储到Redis中，并设置过期时间为5小时。
-		err = RedisConn2.Set(c, key, Y, 5*time.Minute).Err()
+		err = global.RedisConn.Set(c, key, Y, 5*time.Minute).Err()
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 			fmt.Println("压缩错误：Y")
@@ -112,19 +113,19 @@ func GetRedisBookId(c *gin.Context, bookIdStr string, size int, direction string
 	id, err := strconv.Atoi(bookIdStr)
 	fmt.Println(key)
 	//根据传入的pageStr构造键名key，用于在Redis中查找数据,并将数据保存在data中.
-	data, err := RedisConn2.Get(c, key).Bytes()
+	data, err := global.RedisConn.Get(c, key).Bytes()
 	//如果Redis中不存在该数据，即err为redis.Nil，则说明需要从数据库中获取数据，并进行压缩存储到Redis中。
 	if err == redis.Nil {
 		book := make([]Book, 0)
 		if direction == "back" {
-			sql := "select * from book where id >= ? order by id ASC limit ?"
-			err := DB.Raw(sql, id, size).Scan(&book).Error
+			sql := "select * from book where id > ? order by id ASC limit ?"
+			err := global.DB.Raw(sql, id, size).Scan(&book).Error
 			if err != nil {
 				fmt.Printf("查找bookId页之后的图书失败:%+v\n", err.Error())
 			}
 		} else {
-			sql := "select * from book where id <= ? order by id ASC limit ?"
-			err := DB.Raw(sql, id, size).Scan(&book).Error
+			sql := "select * from book where id < ? order by id ASC limit ?"
+			err := global.DB.Raw(sql, id, size).Scan(&book).Error
 			if err != nil {
 				fmt.Printf("查找bookId页之前的图书失败:%+v\n", err.Error())
 			}
@@ -135,7 +136,7 @@ func GetRedisBookId(c *gin.Context, bookIdStr string, size int, direction string
 		data = Y
 		//使用RedisConn.Set方法将key和Y存储到Redis中，并设置过期时间为5分钟。
 		num := rand.Intn(5)
-		err = RedisConn2.Set(c, key, Y, time.Duration(num)*time.Second).Err()
+		err = global.RedisConn.Set(c, key, Y, time.Duration(num)*time.Second).Err()
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 			fmt.Println("压缩错误 DB2：Y")
@@ -151,7 +152,7 @@ func GetRedisBookId(c *gin.Context, bookIdStr string, size int, direction string
 func PreHeating(bookId int64, size int) []Book {
 	var books []Book
 	sql := "select * from book where id >= ? limit ?"
-	err := DB.Raw(sql, bookId, size).Scan(&books).Error
+	err := global.DB.Raw(sql, bookId, size).Scan(&books).Error
 	if err != nil {
 		fmt.Printf("获取数据库中热门书籍失败:err:%+v\n", err.Error())
 	}
@@ -163,7 +164,7 @@ func SavePreHeatingBooks(id int64, book []Book) {
 	value := YS(book)
 	idStr := strconv.FormatInt(id, 10)
 	key := "book" + idStr
-	err := RedisConn2.Set(c, key, value, 5*time.Second).Err()
+	err := global.RedisConn.Set(c, key, value, 5*time.Second).Err()
 	if err != nil {
 		fmt.Printf("将预热数据存储在redis中失败！err:%+v\n", err.Error())
 	}

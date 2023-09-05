@@ -1,7 +1,8 @@
 package model
 
 import (
-	"LibraryManagementV1/LM_V1/tools"
+	"LibraryManagementV1/LM_V3/global"
+	"LibraryManagementV1/LM_V3/tools"
 	"fmt"
 	"time"
 )
@@ -10,7 +11,7 @@ import (
 func CreateRecord(userId int64, bookId int64) *Record {
 	var ret Book
 
-	tx := DB.Begin()
+	tx := global.DB.Begin()
 	//这里加上for update为查询这条加锁
 	sql := "SELECT * FROM book WHERE id = ? for update"
 	err := tx.Raw(sql, bookId).Find(&ret).Error
@@ -37,7 +38,7 @@ func CreateRecord(userId int64, bookId int64) *Record {
 		OverTime:  time.Now().Add(tools.ContinueTime),
 	}
 	sql = "INSERT INTO record (user_id,book_id,status,start_time,over_time) VALUES (?,?,?,?,?)"
-	err = tx.Exec(sql, record.UserId, record.BookId, record.Status, record.StartTime, record.OverTime).Error
+	err = tx.Exec(sql, record.UserId, record.BookId, record.Status, record.StartTime.Format("2006-01-02 15:04:05"), record.OverTime.Format("2006-01-02 15:04:05")).Error
 	if err != nil {
 		tx.Rollback()
 	}
@@ -52,7 +53,7 @@ func CreateRecord(userId int64, bookId int64) *Record {
 }
 
 func ReturnBook(userId int64, bookId int64) {
-	tx := DB.Begin()
+	tx := global.DB.Begin()
 	tm := time.Now()
 	var book Book
 	sql := "SELECT  *FROM `book` WHERE id = ?"
@@ -89,7 +90,7 @@ func ReturnBook(userId int64, bookId int64) {
 func UserGetRecords(userId int64) []*Record {
 	var record []*Record
 	sql := "select * from record where user_id = ? order by start_time"
-	err := DB.Raw(sql, userId).Scan(&record).Error
+	err := global.DB.Raw(sql, userId).Scan(&record).Error
 	if err != nil {
 		fmt.Printf("查询用户借阅记录失败！err:%+v\n", err.Error())
 	}
@@ -99,7 +100,7 @@ func UserGetRecords(userId int64) []*Record {
 func AdminGetRecords() *Record {
 	var record *Record
 	sql := "select * from record "
-	err := DB.Raw(sql).Scan(&record).Error
+	err := global.DB.Raw(sql).Scan(&record).Error
 
 	if err != nil {
 		fmt.Printf("管理员查询借阅记录表失败！err:%+v\n", err.Error())
@@ -111,7 +112,7 @@ func AdminGetRecords() *Record {
 func GetUserRecordStatus(status int) *Record {
 	var record *Record
 	sql := "select * from record where status = ?"
-	err := DB.Raw(sql, status).Scan(&record).Error
+	err := global.DB.Raw(sql, status).Scan(&record).Error
 	if err != nil {
 		fmt.Printf("管理员查询借阅归还或未归还状态失败！err:%+v\n", err.Error())
 		return nil

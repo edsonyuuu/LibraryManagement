@@ -1,6 +1,7 @@
 package model
 
 import (
+	"LibraryManagementV1/LM_V3/global"
 	"math/rand"
 	"time"
 )
@@ -15,7 +16,7 @@ const (
 func GetMessage(userId int64) []SendMsg {
 	sql := "select * from send_msg where status=1 and user_id=?"
 	var messages []SendMsg
-	DB.Raw(sql, userId).Scan(&messages)
+	global.DB.Raw(sql, userId).Scan(&messages)
 	return messages
 }
 

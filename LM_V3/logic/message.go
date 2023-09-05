@@ -11,14 +11,14 @@ import (
 
 // SendMsg godoc
 //
-// @Summary		用户收件箱
-// @Description	获取用户收件箱信息(这个接口获取消息没有什么意义，只是提示有书没还)
-// @Tags		user/users
-// @Produce		json
-// @CookieParam id string true "用户id"
-// @Param Authorization header string true "用户令牌"
-// @response 200,500 {object} tools.HttpCode
-// @Router			/user/users/messages [GET]
+//	@Summary		用户收件箱
+//	@Description	获取用户收件箱信息(这个接口获取消息没有什么意义，只是提示有书没还)
+//	@Tags			user/users
+//	@Produce		json
+//	@CookieParam	id string true "用户id"
+//	@Param			Authorization	header		string	true	"用户令牌"
+//	@response		200,500			{object}	tools.HttpCode
+//	@Router			/user/users/messages [GET]
 func SendMsg(c *gin.Context) {
 	userIdStr, _ := c.Cookie("id")
 	userId, _ := strconv.ParseInt(userIdStr, 10, 64)

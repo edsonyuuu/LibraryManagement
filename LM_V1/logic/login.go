@@ -34,8 +34,8 @@ type Token struct {
 //	@Produce		json
 //	@Param			user_name	formData	string	true	"用户名"
 //	@Param			password	formData	string	true	"密码"
-//	@Param			code	    formData	string	true	"验证码"
-//	@response		200,500	{object}	tools.HttpCode{data=Token}
+//	@Param			code		formData	string	true	"验证码"
+//	@response		200,500		{object}	tools.HttpCode{data=Token}
 //	@Router			/userLogin [POST]
 func UserLogin(c *gin.Context) {
 
@@ -115,8 +115,8 @@ func UserLogin(c *gin.Context) {
 //	@Produce		json
 //	@Param			user_name	formData	string	true	"用户名"
 //	@Param			password	formData	string	true	"密码"
-//	@Param			code	    formData	string	true	"验证码"
-//	@response		200,500	{object}	tools.HttpCode{data=Token}
+//	@Param			code		formData	string	true	"验证码"
+//	@response		200,500		{object}	tools.HttpCode{data=Token}
 //	@Router			/adminLogin [POST]
 func LibrarianLogin(c *gin.Context) {
 	code, err := model.RedisConn.Get(c, "code").Result()
@@ -214,12 +214,13 @@ func AdminLogout(c *gin.Context) {
 }
 
 // SendNum godoc
-// @Summary 发送验证码
-// @Description 生成并发送验证码到用户，并将验证码存储在Redis中
-// @Produce json
-// @Success 200 {object} tools.HttpCode
-// @Failure 404 {object} tools.HttpCode
-// @Router /GetCode [get]
+//
+//	@Summary		发送验证码
+//	@Description	生成并发送验证码到用户，并将验证码存储在Redis中
+//	@Produce		json
+//	@Success		200	{object}	tools.HttpCode
+//	@Failure		404	{object}	tools.HttpCode
+//	@Router			/GetCode [get]
 func SendNum(c *gin.Context) {
 	// 生成验证码
 	SendCode := model.GenerateCode()

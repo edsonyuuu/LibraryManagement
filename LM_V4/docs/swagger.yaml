@@ -1,0 +1,840 @@
+definitions:
+  logic.Token:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  tools.HttpCode:
+    properties:
+      code:
+        type: integer
+      data: {}
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /GetCode/{phone}:
+    get:
+      description: 生成并发送验证码到用户，并将验证码存储在Redis中
+      parameters:
+      - description: 手机号
+        in: path
+        name: phone
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 发送验证码
+  /admin/books:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 添加新图书
+      parameters:
+      - description: 图书分类ID
+        in: formData
+        name: categoryId
+        required: true
+        type: integer
+      - description: 图书编号
+        in: formData
+        name: bn
+        required: true
+        type: string
+      - description: 图书名称
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: 图书描述
+        in: formData
+        name: description
+        type: string
+      - description: 图书数量
+        in: formData
+        name: count
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 添加图书
+      tags:
+      - Admin
+  /admin/books/{id}:
+    delete:
+      description: 根据图书ID删除图书信息
+      parameters:
+      - description: 图书ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 删除图书
+      tags:
+      - AdminDelete
+    put:
+      consumes:
+      - multipart/form-data
+      description: 根据图书ID更新图书信息
+      parameters:
+      - description: 图书ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 图书编号
+        in: formData
+        name: bn
+        type: string
+      - description: 图书名称
+        in: formData
+        name: name
+        type: string
+      - description: 图书描述
+        in: formData
+        name: description
+        type: string
+      - description: 图书数量
+        in: formData
+        name: count
+        type: integer
+      - description: 图书种类ID
+        in: formData
+        name: categoryId
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 更新图书信息
+      tags:
+      - AdminPUT
+  /admin/categories:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 添加新的图书种类信息
+      parameters:
+      - description: 图书种类名称
+        in: formData
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 添加图书种类信息
+      tags:
+      - Admin
+  /admin/categories/{id}:
+    delete:
+      description: 根据图书种类ID删除图书种类信息
+      parameters:
+      - description: 图书种类ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 删除图书种类
+      tags:
+      - AdminDelete
+    put:
+      consumes:
+      - multipart/form-data
+      description: 根据图书分类ID更新图书分类信息
+      parameters:
+      - description: 图书分类ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 分类名称
+        in: formData
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 更新图书种类信息
+      tags:
+      - AdminPUT
+  /admin/records:
+    get:
+      description: 查询记录表中的所有记录
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 查询记录表信息
+      tags:
+      - AdminGet
+  /admin/records/{status}:
+    get:
+      description: 根据归还或未归还状态查询记录表信息
+      parameters:
+      - description: 归还或未归还状态，1为未归还，0为已归还
+        in: path
+        name: status
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 查询记录表归还或未归还状态信息
+      tags:
+      - AdminGet
+  /admin/users:
+    get:
+      description: 查看所有用户信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 查询所有用户
+      tags:
+      - AdminGet
+  /admin/users/{id}:
+    delete:
+      consumes:
+      - multipart/form-data
+      description: 根据用户ID删除用户信息
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 删除用户信息
+      tags:
+      - AdminDelete
+    put:
+      consumes:
+      - multipart/form-data
+      description: 管理员修改用户信息
+      parameters:
+      - description: UserID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新用户名
+        in: formData
+        name: user_name
+        required: true
+        type: string
+      - description: 更新用户密码
+        in: formData
+        name: newPwd
+        required: true
+        type: string
+      - description: 更新用户手机号码
+        in: formData
+        name: phone
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 管理员修改用户信息
+      tags:
+      - AdminPUT
+  /admin/users/{id}/records/{status}:
+    get:
+      consumes:
+      - multipart/form-data
+      description: 管理员获取用户借阅状态
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 借阅状态码（1为借阅；0为未借阅）
+        in: path
+        name: status
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 获取用户借阅状态
+      tags:
+      - AdminGet
+  /adminLogin:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 执行管理员登录操作
+      parameters:
+      - description: 用户名
+        in: formData
+        name: user_name
+        required: true
+        type: string
+      - description: 密码
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: 手机号
+        in: formData
+        name: phone
+        required: true
+        type: string
+      - description: 验证码
+        in: formData
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/tools.HttpCode'
+            - properties:
+                data:
+                  $ref: '#/definitions/logic.Token'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/tools.HttpCode'
+            - properties:
+                data:
+                  $ref: '#/definitions/logic.Token'
+              type: object
+      summary: 管理员登录
+      tags:
+      - Admin登录模块
+  /adminLogout:
+    get:
+      consumes:
+      - application/json
+      description: 管理员退出登录
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 管理员退出登录
+      tags:
+      - Admin登录模块
+  /books/{id}:
+    get:
+      consumes:
+      - multipart/form-data
+      description: 根据图书ID获取图书信息
+      parameters:
+      - description: 图书ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 获取图书bookId的信息
+      tags:
+      - 游客模式
+  /books/page:
+    get:
+      consumes:
+      - application/json
+      description: 游客获取所有图书信息
+      parameters:
+      - description: 图书id
+        in: query
+        name: id
+        type: string
+      - description: 每页书籍数量
+        in: query
+        name: size
+        type: string
+      - description: 输入任何内容将向前翻页
+        in: query
+        name: direction
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 搜索图书
+      tags:
+      - 游客模式
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有图书种类信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 搜索图书种类
+      tags:
+      - 游客模式
+  /logout:
+    post:
+      consumes:
+      - application/json
+      description: 会执行用户退出操作
+      produces:
+      - application/json
+      responses:
+        "302":
+          description: Found
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 用户退出
+      tags:
+      - User
+  /user/users:
+    get:
+      consumes:
+      - application/json
+      description: 根据用户ID获取用户信息
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 获取用户信息
+      tags:
+      - 用户信息
+    put:
+      consumes:
+      - multipart/form-data
+      description: 根据请求中的参数更新用户信息
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        type: string
+      - description: 新用户名
+        in: formData
+        name: user_name
+        type: string
+      - description: 旧密码
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: 新密码
+        in: formData
+        name: new_password
+        required: true
+        type: string
+      - description: 新手机号
+        in: formData
+        name: phone
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 更新用户信息
+      tags:
+      - 用户信息
+  /user/users/{id}/records:
+    get:
+      consumes:
+      - multipart/form-data
+      description: 根据用户ID查询其借阅记录
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 获取用户借阅记录
+      tags:
+      - 用户借阅记录
+  /user/users/{id}/records/{status}:
+    get:
+      consumes:
+      - multipart/form-data
+      description: 根据用户ID和status来查看某个用户没有还书或还书的情况
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 获取用户借阅记录状态
+      tags:
+      - 用户借阅或归还状态
+  /user/users/messages:
+    get:
+      description: 获取用户收件箱信息(这个接口获取消息没有什么意义，只是提示有书没还)
+      parameters:
+      - description: 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 用户收件箱
+      tags:
+      - user/users
+  /user/users/records/{bookId}:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 根据用户ID和图书ID进行借阅操作
+      parameters:
+      - description: 图书ID
+        in: path
+        name: bookId
+        required: true
+        type: integer
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 借阅图书
+      tags:
+      - 图书借阅与归还
+    put:
+      consumes:
+      - multipart/form-data
+      description: 用户归还图书
+      parameters:
+      - description: 图书ID
+        in: path
+        name: bookId
+        required: true
+        type: integer
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 还书
+      tags:
+      - 图书借阅与归还
+  /userLogin:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 会执行用户登录操作
+      parameters:
+      - description: 用户名
+        in: formData
+        name: user_name
+        required: true
+        type: string
+      - description: 密码
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: 手机号
+        in: formData
+        name: phone
+        required: true
+        type: string
+      - description: 验证码
+        in: formData
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/tools.HttpCode'
+            - properties:
+                data:
+                  $ref: '#/definitions/logic.Token'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/tools.HttpCode'
+            - properties:
+                data:
+                  $ref: '#/definitions/logic.Token'
+              type: object
+      summary: 用户登录
+      tags:
+      - User
+  /users:
+    post:
+      description: 用户注册
+      parameters:
+      - description: 用户名
+        in: formData
+        name: user_name
+        required: true
+        type: string
+      - description: 手机号码
+        in: formData
+        name: phone
+        required: true
+        type: string
+      - description: 用户密码
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: 用户真实姓名
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: 性别
+        in: formData
+        name: sex
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tools.HttpCode'
+      summary: 用户注册
+      tags:
+      - User
+swagger: "2.0"

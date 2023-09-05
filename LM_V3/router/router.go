@@ -2,6 +2,7 @@ package router
 
 import (
 	_ "LibraryManagementV1/LM_V3/docs"
+	"LibraryManagementV1/LM_V3/global"
 	"LibraryManagementV1/LM_V3/logic"
 	"LibraryManagementV1/LM_V3/model"
 	"LibraryManagementV1/LM_V3/tools"
@@ -23,7 +24,7 @@ func New() *gin.Engine {
 	go DingShi()
 	go PreDingShi()
 	//
-	r.Use(limitClick(5, 10))
+	//r.Use(limitClick(5, 10))
 	userRouter(r)
 	adminRouter(r)
 	r.Static("/kit", "./kit")
@@ -60,7 +61,7 @@ func DingShi() {
 
 // PreDingShi 预热数据，将前几页数据添加进redis中的定时器
 func PreDingShi() {
-	t := time.NewTicker(5 * time.Second)
+	t := time.NewTicker(10 * time.Second)
 	defer t.Stop()
 	id := int64(1)
 	size := 100
@@ -89,7 +90,7 @@ func limitClick(maxCount int, t time.Duration) gin.HandlerFunc {
 		pathStr := fmt.Sprintf("%v_%v_%v", ip, ua, lastUrl)
 		fmt.Println(pathStr)
 		//
-		requestQuery := model.RedisConn2
+		requestQuery := global.RedisConn
 		//访问的路径次数加一
 		requestQuery.Incr(c, pathStr)
 		//

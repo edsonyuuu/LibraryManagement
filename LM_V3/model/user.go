@@ -1,6 +1,7 @@
 package model
 
 import (
+	"LibraryManagementV1/LM_V3/global"
 	"fmt"
 )
 
@@ -9,7 +10,7 @@ func GetUser(name, password string) *User {
 	//user := make([]*User, 0)
 	user := &User{}
 	//var user *User
-	err := DB.Where("user_name = ? and password = ?", name, password).First(user).Error
+	err := global.DB.Where("user_name = ? and password = ?", name, password).First(user).Error
 	if err != nil {
 		fmt.Printf("user:%+v\n", err.Error())
 	}
@@ -32,7 +33,7 @@ func AddUser() {
 func LookSelfMsg(userId int64) []*User {
 	user := make([]*User, 0)
 	sql := "select * from user where  id = ?"
-	err := DB.Raw(sql, userId).Scan(&user).Error
+	err := global.DB.Raw(sql, userId).Scan(&user).Error
 	//err := DB.Table("user").Where("id = ?", userId).Find(&user).Error
 	if err != nil {
 		fmt.Printf("查看用户自己信息失败！err:%+v\n", err.Error())
@@ -44,7 +45,7 @@ func GetUserBorrowStatus(userId int64, status int) *Record {
 	//
 	var userStatus *Record
 	sql := "select * from record where status = ? and user_id = ?"
-	err := DB.Raw(sql, status, userId).Scan(&userStatus).Error
+	err := global.DB.Raw(sql, status, userId).Scan(&userStatus).Error
 	if err != nil {
 		fmt.Printf("查询用户借阅状态失败！err:%+v\n", err.Error())
 	}
@@ -53,7 +54,7 @@ func GetUserBorrowStatus(userId int64, status int) *Record {
 
 func UpdateUserMsg(userId int64, userName string, password string, phone string) []*User {
 	user := make([]*User, 0)
-	tx := DB.Begin()
+	tx := global.DB.Begin()
 	sql := "update user set password = ? ,phone = ?,user_name = ? where id = ?"
 	err := tx.Exec(sql, password, phone, userName, userId).Error
 	if err != nil {
@@ -67,7 +68,7 @@ func UpdateUserMsg(userId int64, userName string, password string, phone string)
 func GetUsers() []*User {
 	var user []*User
 	sql := "select * from user"
-	err := DB.Raw(sql).Scan(&user).Error
+	err := global.DB.Raw(sql).Scan(&user).Error
 	if err != nil {
 		fmt.Printf("管理员查询所有用户信息失败！err：%+v\n", err.Error())
 	}

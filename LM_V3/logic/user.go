@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"LibraryManagementV1/LM_V3/global"
 	"LibraryManagementV1/LM_V3/model"
 	"LibraryManagementV1/LM_V3/tools"
 	"fmt"
@@ -12,14 +13,14 @@ import (
 
 // GetUser godoc
 //
-// @Summary 获取用户信息
-// @Description 根据用户ID获取用户信息
-// @Tags 用户信息
-// @Accept json
-// @Produce json
-// @Param Authorization header string false "Bearer 用户令牌"
-// @response 200,500 {object} tools.HttpCode
-// @Router /user/users [get]
+//	@Summary		获取用户信息
+//	@Description	根据用户ID获取用户信息
+//	@Tags			用户信息
+//	@Accept			json
+//	@Produce		json
+//	@Param			Authorization	header		string	false	"Bearer 用户令牌"
+//	@response		200,500			{object}	tools.HttpCode
+//	@Router			/user/users [get]
 func GetUser(c *gin.Context) {
 	userIdStr, _ := c.Cookie("id")
 	userId, _ := strconv.ParseInt(userIdStr, 10, 64)
@@ -41,18 +42,19 @@ func GetUser(c *gin.Context) {
 }
 
 // UpdateUser 更新用户信息
-// @Summary 更新用户信息
-// @Description 根据请求中的参数更新用户信息
-// @Tags 用户信息
-// @Accept multipart/form-data
-// @Produce json
-// @Param Authorization header string false "Bearer 用户令牌"
-// @Param user_name formData string false "新用户名"
-// @Param password formData string true "旧密码"
-// @Param new_password formData string true "新密码"
-// @Param phone formData string false "新手机号"
-// @response 200,500 {object} tools.HttpCode
-// @Router /user/users [put]
+//
+//	@Summary		更新用户信息
+//	@Description	根据请求中的参数更新用户信息
+//	@Tags			用户信息
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			Authorization	header		string	false	"Bearer 用户令牌"
+//	@Param			user_name		formData	string	false	"新用户名"
+//	@Param			password		formData	string	true	"旧密码"
+//	@Param			new_password	formData	string	true	"新密码"
+//	@Param			phone			formData	string	false	"新手机号"
+//	@response		200,500			{object}	tools.HttpCode
+//	@Router			/user/users [put]
 func UpdateUser(c *gin.Context) {
 	var user model.User
 
@@ -101,15 +103,15 @@ func UpdateUser(c *gin.Context) {
 
 // GetUserRecords godoc
 //
-// @Summary 获取用户借阅记录
-// @Description 根据用户ID查询其借阅记录
-// @Tags 用户借阅记录
-// @Accept multipart/form-data
-// @Produce json
-// @Param id path int true "用户ID"
-// @Param Authorization header string false "Bearer 用户令牌"
-// @response 200,500 {object} tools.HttpCode
-// @Router /user/users/{id}/records [get]
+//	@Summary		获取用户借阅记录
+//	@Description	根据用户ID查询其借阅记录
+//	@Tags			用户借阅记录
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			id				path		int		true	"用户ID"
+//	@Param			Authorization	header		string	false	"Bearer 用户令牌"
+//	@response		200,500			{object}	tools.HttpCode
+//	@Router			/user/users/{id}/records [get]
 func GetUserRecords(c *gin.Context) {
 	//去看用户id为？的借阅记录
 	userIdStr := c.Param("id")
@@ -132,15 +134,16 @@ func GetUserRecords(c *gin.Context) {
 }
 
 // GetUserStatusRecords godoc
-// @Summary 获取用户借阅记录状态
-// @Description 根据用户ID和status来查看某个用户没有还书或还书的情况
-// @Tags 用户借阅或归还状态
-// @Accept multipart/form-data
-// @Produce json
-// @Param id path int true "用户ID"
-// @Param Authorization header string false "Bearer 用户令牌"
-// @response 200,500 {object} tools.HttpCode
-// @Router /user/users/{id}/records/{status} [get]
+//
+//	@Summary		获取用户借阅记录状态
+//	@Description	根据用户ID和status来查看某个用户没有还书或还书的情况
+//	@Tags			用户借阅或归还状态
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			id				path		int		true	"用户ID"
+//	@Param			Authorization	header		string	false	"Bearer 用户令牌"
+//	@response		200,500			{object}	tools.HttpCode
+//	@Router			/user/users/{id}/records/{status} [get]
 func GetUserStatusRecords(c *gin.Context) {
 	userIdStr := c.Param("id")
 	userId, _ := strconv.ParseInt(userIdStr, 10, 64)
@@ -165,20 +168,20 @@ func GetUserStatusRecords(c *gin.Context) {
 
 // BorrowBook godoc
 //
-// @Summary 借阅图书
-// @Description 根据用户ID和图书ID进行借阅操作
-// @Tags 图书借阅与归还
-// @Accept multipart/form-data
-// @Produce json
-// @Param bookId path int true "图书ID"
-// @Param Authorization header string false "Bearer 用户令牌"
-// @response 200,500 {object} tools.HttpCode
-// @Router /user/users/records/{bookId} [post]
+//	@Summary		借阅图书
+//	@Description	根据用户ID和图书ID进行借阅操作
+//	@Tags			图书借阅与归还
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			bookId			path		int		true	"图书ID"
+//	@Param			Authorization	header		string	false	"Bearer 用户令牌"
+//	@response		200,500			{object}	tools.HttpCode
+//	@Router			/user/users/records/{bookId} [post]
 func BorrowBook(c *gin.Context) {
 	userIdStr, _ := c.Cookie("id")
 	url := c.Request.URL.Path
 	pathStr := fmt.Sprintf("%v%v", url, userIdStr)
-	requestQuery := model.RedisConn2
+	requestQuery := global.RedisConn
 	//先从redis中查询，若存过则提示信息
 	redisStr, _ := requestQuery.Get(c, pathStr).Result()
 	if pathStr == redisStr {
@@ -219,15 +222,15 @@ func BorrowBook(c *gin.Context) {
 
 // ReturnBook godoc
 //
-// @Summary 还书
-// @Description 用户归还图书
-// @Tags 图书借阅与归还
-// @Accept multipart/form-data
-// @Produce json
-// @Param bookId path int true "图书ID"
-// @Param Authorization header string false "Bearer 用户令牌"
-// @response 200,500 {object} tools.HttpCode
-// @Router /user/users/records/{bookId} [put]
+//	@Summary		还书
+//	@Description	用户归还图书
+//	@Tags			图书借阅与归还
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			bookId			path		int		true	"图书ID"
+//	@Param			Authorization	header		string	false	"Bearer 用户令牌"
+//	@response		200,500			{object}	tools.HttpCode
+//	@Router			/user/users/records/{bookId} [put]
 func ReturnBook(c *gin.Context) {
 	userIdStr, _ := c.Cookie("id")
 	bookIdStr := c.Param("bookId")
