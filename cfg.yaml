@@ -6,26 +6,19 @@ mysql:
   user: root
   password: 1234
   log_lev: info
-
-#192.168.1.100
-
 redis:
   host: 127.0.0.1
   port: 6379
   password:
-
-
 logger:
   level: info
-  prefix: my_blog
+  prefix: my_library
   director: log
   show_line: true
   log_in_console: true
-
 grpc:
   host: 127.0.0.1
   port: 9090
-
 system:
   port: 8080
   env: debug
